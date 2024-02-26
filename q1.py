@@ -1,7 +1,8 @@
+# itertools library. product() gives cartesian products of any number of lists 
 from itertools import product
 
 def input_space(domains):
-    return product(*domains)
+    return product(*domains) #use pointer
 
 domains = [
 {0, 1, 2},
