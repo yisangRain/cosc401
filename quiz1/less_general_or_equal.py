@@ -1,5 +1,21 @@
-def less_general_or_equal(ha, hb, X):
+'''
+return False if x is accepted by ha, but not by hb
 
+i.e. 
+    ha(x): return x % 2 == 0
+    hb(x): return x % 3 == 0
+
+if x == 2, 
+    ha(2) = True
+    hb(2) = False
+
+for this case, ha is more general (accepts 2) than hb (doesn't accept 2)
+'''
+def less_general_or_equal(ha, hb, X):
+    for x in X:
+        if ha(x) and not hb(x):
+            return False
+    return True
 
 
 
