@@ -13,7 +13,7 @@ def pk_calculator(dataset):
         n = 0
         # find sum of each classification's occurance
         for d in dataset:
-            if d[1] is k:
+            if d[1] == k:
                 n += 1
         # Calculate pm per k, and record as a tuple (k, pmk)
         pk_list.append((k, n/Qm ))
@@ -53,48 +53,48 @@ def entropy(dataset):
         _, pk = item
         sums += (pk * math.log(pk, 2))
 
-    return sums * -1
+    return sums * - 1
 
 
-data = [
-    ((False, False), False),
-    ((False, True), True),
-    ((True, False), True),
-    ((True, True), False)
-]
-print("{:.4f}".format(misclassification(data)))
-print("{:.4f}".format(gini(data)))
-print("{:.4f}".format(entropy(data)))
+# data = [
+#     ((False, False), False),
+#     ((False, True), True),
+#     ((True, False), True),
+#     ((True, True), False)
+# ]
+# print("{:.4f}".format(misclassification(data)))
+# print("{:.4f}".format(gini(data)))
+# print("{:.4f}".format(entropy(data)))
 # 0.5000
 # 0.5000
 # 1.0000
 
 
-data = [
-    ((0, 1, 2), 1),
-    ((0, 2, 1), 2),
-    ((1, 0, 2), 1),
-    ((1, 2, 0), 3),
-    ((2, 0, 1), 3),
-    ((2, 1, 0), 3)
-]
-print("{:.4f}".format(misclassification(data)))
-print("{:.4f}".format(gini(data)))
-print("{:.4f}".format(entropy(data)))
+# data = [
+#     ((0, 1, 2), 1),
+#     ((0, 2, 1), 2),
+#     ((1, 0, 2), 1),
+#     ((1, 2, 0), 3),
+#     ((2, 0, 1), 3),
+#     ((2, 1, 0), 3)
+# ]
+# print("{:.4f}".format(misclassification(data)))
+# print("{:.4f}".format(gini(data)))
+# print("{:.4f}".format(entropy(data)))
 # 0.5000
 # 0.6111
 # 1.4591
 
 
 	
-# dataset = []
-# with open("car.data") as f: #no car data, ha
-#     for line in f.readlines():
-#         out, *data = line.split(",")
-#         dataset.append((data, out))
-# print("{:.4f}".format(misclassification(dataset)))
-# print("{:.4f}".format(gini(dataset)))
-# print("{:.4f}".format(entropy(dataset)))
+dataset = []
+with open("quiz2/car.data") as f: #no car data, ha
+    for line in f.readlines():
+        out, *data = line.split(",")
+        dataset.append((data, out))
+print("{:.4f}".format(misclassification(dataset)))
+print("{:.4f}".format(gini(dataset)))
+print("{:.4f}".format(entropy(dataset)))
 # 0.7500
 # 0.7500
 # 2.0000
