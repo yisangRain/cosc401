@@ -87,14 +87,14 @@ def entropy(dataset):
 
 
 	
-dataset = []
-with open("quiz2/car.data") as f: #no car data, ha
-    for line in f.readlines():
-        out, *data = line.split(",")
-        dataset.append((data, out))
-print("{:.4f}".format(misclassification(dataset)))
-print("{:.4f}".format(gini(dataset)))
-print("{:.4f}".format(entropy(dataset)))
+# dataset = []
+# with open("quiz2/car.data") as f: #no car data, ha
+#     for line in f.readlines():
+#         out, *data = line.split(",")
+#         dataset.append((data, out))
+# print("{:.4f}".format(misclassification(dataset)))
+# print("{:.4f}".format(gini(dataset)))
+# print("{:.4f}".format(entropy(dataset)))
 # 0.7500
 # 0.7500
 # 2.0000

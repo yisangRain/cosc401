@@ -1,8 +1,8 @@
 class DTNode:
-    def __init__(self, decision):
+    def __init__(self, decision, children=None):
         # either a function or a value
         self.decision = decision
-        self.children = None
+        self.children = children
 
 
     def predict(self, inputObject):
@@ -60,4 +60,4 @@ def q2_test():
     # 2
 
 # q1_test()
-q2_test()
+# q2_test()
