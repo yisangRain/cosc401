@@ -14,18 +14,18 @@ def logistic_regression(xs, ys, alpha, num_iteration):
             x = xs[i]
             y = ys[i]
 
-            prediction = sigmoid(np.dot(theta.T, x) + bias)
+            prediction = sigmoid(np.dot(theta, x) + bias)
 
             #compute gradients
             gradient_theta = x * (y - prediction)
 
             gradient_bias = y - prediction
 
-            theta = theta - alpha * gradient_theta
-            bias = bias - alpha * gradient_bias
-    
+            theta = theta + alpha * gradient_theta
+            bias = bias + alpha * gradient_bias
+
     def model(x, theta=theta, bias=bias):
-        return sigmoid(np.dot(theta.T, x) + bias)
+        return sigmoid(np.dot(theta, x) + bias)
     return model
 
 
