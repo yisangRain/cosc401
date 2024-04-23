@@ -90,3 +90,14 @@ else:
 # OK
 
 
+data = np.genfromtxt("quiz1/quiz3/data_banknote_authentication.txt", delimiter=',')
+np.random.seed(0)
+np.random.shuffle(data)
+data = data[:500, :]
+
+xs_train, xs_test = data[:-50, :-1], data[-50:, :-1]
+ys_train, ys_test = data[:-50, -1], data[-50:, -1]
+model = logistic_regression(xs_train, ys_train, 0.02, 1000)
+print(sum(abs(y - model(x)) for (x, y) in zip(xs_test, ys_test))/50 < 0.05)
+
+#True
