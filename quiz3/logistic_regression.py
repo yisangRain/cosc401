@@ -1,26 +1,33 @@
 import numpy as np
 
-def sigmoid(x):
-    return 1 / (1 +np.exp(-x))
 
-def logistic_regression(xs, ys, alpha, num_iterations):
-    
-    #set initials
-    theta = np.zeros((xs.shape[1]))
-    # bias = np.zeros(xs.shape[1])
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))  
 
-    #stochastic descent
-    for _ in range(num_iterations):
+def logistic_regression(xs, ys, alpha, num_iteration):
+    #set initial values
+    theta = np.zeros(xs.shape[1])
+    bias = 0
+
+    for epoch in range(num_iteration):
         for i in range(xs.shape[0]):
-            prediction = sigmoid(np.dot(theta.T, xs[i]))
-            error = ys[i] - prediction
-        
-            theta = theta + (alpha * error * xs[i]) 
+            x = xs[i]
+            y = ys[i]
 
-    def model(value, m_theta=theta):
-        return 1 / (1 +np.exp(-np.dot(m_theta.T, value)))
+            prediction = sigmoid(np.dot(theta.T, x) + bias)
 
+            #compute gradients
+            gradient_theta = x * (y - prediction)
+
+            gradient_bias = y - prediction
+
+            theta = theta - alpha * gradient_theta
+            bias = bias - alpha * gradient_bias
+    
+    def model(x, theta=theta, bias=bias):
+        return sigmoid(np.dot(theta.T, x) + bias)
     return model
+
 
 
 #Test
