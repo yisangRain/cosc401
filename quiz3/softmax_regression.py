@@ -15,29 +15,38 @@ def one_hot_encoding(ys):
         row[y] = 1
         array.append(row)
     return np.array(array).reshape(len(ys),k+1)
-
+        
 
 def softmax_regression(xs, ys, learning_rate, num_iterations):
-    theta = np.zeros(xs.shape[1])
-    bias = 0
+   
     tau = one_hot_encoding(ys)
-    
+    # number of feature = xs.shape[1], number of classes = tau.shape[1]
+    theta = np.zeros((xs.shape[1], tau.shape[1]))
+    bias = np.zeros(tau.shape[1])
+
     for _ in range(num_iterations):
-        z = np.append(np.dot(theta, xs.T),bias)
+        total_mean_error = 0
+        total_gradient = 0
 
-        o = softmax(z)
+        for i in range(xs.shape[0]):
+            z = np.dot(xs[i], theta) + bias
+            o = softmax(z)
+            error = o - tau[i]
+            total_mean_error += np.mean(error)
+            total_gradient += (error * xs[i])
+            
+        theta += (learning_rate * total_gradient) + (theta * learning_rate)
+        bias += learning_rate * total_mean_error 
 
-        grad = np.dot(o - tau, xs)
-
-        theta += learning_rate * grad
-        bias += np.mean(learning_rate * (o - tau))
-    
-
+    print(theta, bias)
     def model(xs, theta=theta, bias=bias):
-        return one_hot_encoding(np.append(softmax(np.dot(theta, xs.T), bias)))
+        z = (theta.T * xs) + bias
+        soft = softmax(z)
+        return soft.argmax()
     
     return model
-        
+
+            
 
 #Test
 
