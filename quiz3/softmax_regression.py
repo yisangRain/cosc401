@@ -1,7 +1,8 @@
 import numpy as np
 
 def softmax(z):
-    return (np.exp(z.T) / np.sum(np.exp(z))).T
+    total = sum(np.exp(x) for x in z)
+    return np.array([(np.exp(k)/total) for k in z])
 
 
 def one_hot_encoding(ys):
@@ -17,34 +18,34 @@ def one_hot_encoding(ys):
         
 
 def softmax_regression(xs, ys, learning_rate, num_iterations):
-   
-    tau = one_hot_encoding(ys)
-    # number of feature = xs.shape[1], number of classes = tau.shape[1]
-    theta = np.zeros((xs.shape[1], tau.shape[1]))
-    bias = np.zeros(tau.shape[1])
+    i, j = xs.shape
+    xs = np.hstack((np.ones((i,1)), xs))
 
+    y_hot_encoding = one_hot_encoding(ys)
+
+    #initialise theta with r1 = num. class, r2 = num. features + bias column
+    theta = np.zeros((y_hot_encoding.shape[1], j + 1))
+
+    #.......stochastic hahahhahahhahahahhahahahhaha fk
     for _ in range(num_iterations):
-        total_error = []
-        total_gradient = []
+        z = np.dot(theta, xs.T)
+        predict = softmax(z)
 
-        for i in range(xs.shape[0]):
-            z = np.dot(xs[i], theta) + bias
-            o = softmax(z)
-            error = o - tau[i]
-            gradient = error * xs[i]
-            total_error.append(error)
-            total_gradient.append(gradient)
-        
-            theta = theta + (learning_rate * np.sum(total_gradient)) 
-            bias = bias + (learning_rate * np.sum(total_error)) 
+        #gradient
+        gradient = np.dot(predict - y_hot_encoding.T, xs)
 
-    print(theta, bias)
-    def model(xs, theta=theta, bias=bias):
-        z = np.dot(xs, theta) + bias
-        soft = softmax(z)
-        return soft.argmax(axis=1)
+        #update theta (+ bias)
+        theta -= learning_rate * gradient
+    
+    def model(xs, theta=theta):
+        #add bias column to the xs
+        xs = np.append(1, xs)
+        z = np.dot(theta, xs)
+        predict = softmax(z)
+        return np.argmax(predict)
     
     return model
+    
 
             
 
@@ -66,15 +67,35 @@ training_data = np.array([
 xs = training_data[:,0].reshape((-1, 1)) # a 2D n-by-1 array
 ys = training_data[:,1].astype(int)      # a 1D array of length n
 
-h = softmax_regression(xs, ys, 0.05, 750)
+# h = softmax_regression(xs, ys, 0.05, 750)
 
-test_inputs = [(1.30, 1), (2.25, 2), (0.97, 0), (1.07, 1), (1.51, 1)]
-print(f"{'prediction':^10}{'true':^10}")
-for x, y in test_inputs:
-    print(f"{h(x):^10}{y:^10}")
+# test_inputs = [(1.30, 1), (2.25, 2), (0.97, 0), (1.07, 1), (1.51, 1)]
+# print(f"{'prediction':^10}{'true':^10}")
+# for x, y in test_inputs:
+#     print(f"{h(x):^10}{y:^10}")
 # prediction   true   
 #     1         1     
 #     2         2     
 #     0         0     
 #     1         1     
 #     1         1 
+
+print(xs)
+print(xs.shape)
+i, j = xs.shape
+xs = np.hstack((np.ones((i,1)), xs))
+print("xs", xs)
+y_hot_encoding = one_hot_encoding(ys)
+print("yhot", y_hot_encoding.T)
+theta = np.zeros((y_hot_encoding.shape[1], j + 1))
+print(theta)
+
+z = np.dot(theta, xs.T)
+print(z)
+
+predict = softmax(z)
+print("predict", predict)
+
+gradient = np.dot(predict - y_hot_encoding.T, xs)
+print(gradient)
+
