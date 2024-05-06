@@ -1,7 +1,6 @@
 import numpy as np
 
 def linear_regression(xs, ys, basis_functions=None, penalty=0):
-    new_xs = xs
 
     if basis_functions == []:
         return [np.average(ys)]
@@ -13,10 +12,10 @@ def linear_regression(xs, ys, basis_functions=None, penalty=0):
             temp = [f(x) for x in xs]
             matrice.append(np.array(temp))
 
-        new_xs = np.array(matrice).T
+        xs = np.array(matrice).T
     
     ones_column = np.ones((xs.shape[0], 1))
-    xs_with_intercept = np.concatenate((ones_column, new_xs), axis=1)
+    xs_with_intercept = np.concatenate((ones_column, xs), axis=1)
     
     # Calculate the normal equations: θ = (X^T*X + lambda*identity)^-1 * X^T * y
     left_matrix = np.linalg.inv(np.dot(xs_with_intercept.T, xs_with_intercept) + (penalty * np.identity(xs_with_intercept.shape[1])))
@@ -24,7 +23,6 @@ def linear_regression(xs, ys, basis_functions=None, penalty=0):
     theta = np.dot(left_matrix, right_matrix)
     
     return theta
-    
     
 
 xs = np.arange(5).reshape((-1, 1))
@@ -43,11 +41,13 @@ xs = np.arange(-1, 1, 0.1).reshape(-1, 1)
 m, n = xs.shape
 # Some true function plus some noise:
 ys = (xs**2 - 3*xs + 2 + np.random.normal(0, 0.5, (m, 1))).ravel()
+print(ys)
 
 functions = [lambda x: x[0], lambda x: x[0]**2, lambda x: x[0]**3, lambda x: x[0]**4,
       lambda x: x[0]**5, lambda x: x[0]**6, lambda x: x[0]**7, lambda x: x[0]**8]
 
-for penalty in [0, 0.01, 0.1, 1, 10]:
+# for penalty in [0, 0.01, 0.1, 1, 10]:
+for penalty in [0]:
     with np.printoptions(precision=5, suppress=True):
         print(linear_regression(xs, ys, basis_functions=functions, penalty=penalty)
               .reshape((-1, 1)), end="\n\n")
