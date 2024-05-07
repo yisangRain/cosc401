@@ -3,32 +3,20 @@ import itertools
 import math
 
 def monomial_kernel(d):
+    def k(x, y, d=d):
+        phi_x_y = []
+        prod_xy = np.dot(x.T,y)
+
+        for n in range(d+1):
+            phi_x_y.append(prod_xy ** n)
+
+        return sum(phi_x_y)
+        
+    return k
     
-    def k(x, y, dimension = d):
-        m = len(x)
-    
-        phi_list = [lambda x: 1]
-
-        combi = set()
-
-        for i in range(1, dimension+1):
-            combi = combi.union(set(itertools.product(range(m), repeat=i)))
-            
-        for j in list(combi):
-            def temp_function(z, combination = j):
-                subtotal = 1
-                for index in combination:
-                    subtotal *= (z[index])
-                return subtotal
-            phi_list.append(temp_function)
 
 
-        phi_x = np.array([p(x) for p in phi_list])
-        phi_y = np.array([p(y) for p in phi_list])
 
-        return np.dot(phi_x, phi_y)
-
-    return k 
 
 #Tests
 # The monomial kernel of order 1 is just fitting a bias
@@ -59,6 +47,7 @@ def phi(z): # Probably a nicer way to do this...
 x = np.array([0.15, -0.6, 7.1])
 y = np.array([-3.1, 0.01, -0.24])
 print(np.isclose(k(x, y), np.dot(phi(x), phi(y))))
+#True
 
 # Will timeout if feature map is computed
 d = 100
