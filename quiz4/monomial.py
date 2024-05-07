@@ -2,15 +2,16 @@ import numpy as np
 import itertools
 import math
 
+
 def monomial_kernel(d):
     def k(x, y, d=d):
-        phi_x_y = []
+        phi_x_y = 0
         prod_xy = np.dot(x.T,y)
 
         for n in range(d+1):
-            phi_x_y.append(prod_xy ** n)
+            phi_x_y += (prod_xy ** n)
 
-        return sum(phi_x_y)
+        return phi_x_y
         
     return k
     
