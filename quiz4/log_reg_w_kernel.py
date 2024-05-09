@@ -25,21 +25,19 @@ def sigmoid(z):
     return 1 / (1 + np.exp(-z)) 
 
 def logistic_regression_with_kernel(X, y, k, alpha, iterations):
-    theta = np.zeros(X.shape[1])
+    beta_i = np.zeros(X.shape[0])
 
     for _ in range(iterations):
-        kernel = np.zeros(X.shape[1])
         for i in range(X.shape[0]):
-            x = X[i]
-            z = y[i]
-         
-            s_z = z * k(theta, x)
-            kernel = sigmoid(s_z) 
+            beta_j = beta_i
+            beta_sum_j = np.zeros(X.shape[0])
+            for j in range(X.shape[0]):
+                kernel = k(X[i], X[j])
+                beta_sum_j += beta_j * kernel
+            beta_i += alpha * (y[i] - beta_sum_j)
+       
 
-            #compute gradients
-            theta += alpha * kernel
-
-    def model(x, theta=theta):
+    def model(x, theta=beta):
         return sigmoid(np.dot(theta, x))
     return model
 
@@ -55,16 +53,16 @@ def logistic_regression_with_kernel(X, y, k, alpha, iterations):
 #     (0.09, 0)
 # ])
 
-# X = training_examples[:,[0]]
-# y = training_examples[:,1]
+X = training_examples[:,[0]]
+y = training_examples[:,1]
 
-# h = logistic_regression_with_kernel(X, y, monomial_kernel(1), 0.1, 500)
+h = logistic_regression_with_kernel(X, y, monomial_kernel(1), 0.1, 500)
 
-# inputs = np.array([0.88, 0.15, 0.82, 0.07, 0.52])
+inputs = np.array([0.88, 0.15, 0.82, 0.07, 0.52])
 
-# print(f"{'x' : ^5}{'label' : >5}{'true': >5}")
-# for x in inputs:
-#     print(f"{x : <5}{int(h(x)) : ^5}{int(2 * x - 1 >= 0) : ^5}")
+print(f"{'x' : ^5}{'label' : >5}{'true': >5}")
+for x in inputs:
+    print(f"{x : <5}{int(h(x)) : ^5}{int(2 * x - 1 >= 0) : ^5}")
 #   x  label true
 # 0.88   1    1
 # 0.15   0    0
