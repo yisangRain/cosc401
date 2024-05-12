@@ -24,9 +24,9 @@ def rbf_kernel(sigma):
 
     return k
 
-def sigmoid(z):
+def sigmoid(z, threshold = 0.5):
     result = 1 / (1 + np.exp(-z))
-    if result >= 0.5:
+    if result >= threshold:
         return 1
     return 0 
 
@@ -34,7 +34,6 @@ def sigmoid(z):
 def logistic_regression_with_kernel(X, y, k, alpha, iterations):
 
     n_samples, _ = X.shape
-    # bias = 0
     kernel_matrix = np.zeros((n_samples, n_samples))
     beta = np.zeros(n_samples)
 
@@ -46,15 +45,9 @@ def logistic_regression_with_kernel(X, y, k, alpha, iterations):
     for _ in range(iterations):
         for i in range(n_samples):
             total = np.dot(beta, kernel_matrix[i])
-            # for j in range(n_samples):
-            #     total += beta[j] * kernel_matrix[i][j]
-            # total += bias
             sigmoid_value = sigmoid(total)
-            t = y[i]
 
-            beta[i] += alpha * (t - sigmoid_value)
-                     
-            # bias += (alpha * (t - (sigmoid_value))) 
+            beta[i] += alpha * (y[i] - sigmoid_value)
 
     def model(x, beta=beta, k=k, ref=X):
         z = np.sum([k(ref[i], x) * beta[i] for i in range(ref.shape[0])])
@@ -74,7 +67,8 @@ def alogistic_regression_with_kernel(X, y, k, alpha, iterations):
     # train model
     beta = np.zeros(n)
     for _ in range(iterations):
-        beta += alpha * (y - np.dot(km , beta))
+        for i in range(n):
+            beta[i] += alpha * (y[i] - np.dot(km[i], beta))
     
     print(beta)
 
@@ -235,7 +229,7 @@ def test4():
     # [0.332, 0.721, 0.148, 0.541]      0       0
     # [0.51, 0.956, 0.023, 0.249]       0       0
 
-test1()
-test2()
-test3()
+# test1()
+# test2()
+# test3()
 test4()
