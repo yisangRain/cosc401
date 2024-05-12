@@ -25,13 +25,16 @@ def rbf_kernel(sigma):
     return k
 
 def sigmoid(z):
-    return 1 / (1 + np.exp(-z)) 
+    result = 1 / (1 + np.exp(-z))
+    if result >= 0.5:
+        return 1
+    return 0 
 
 
 def logistic_regression_with_kernel(X, y, k, alpha, iterations):
 
     n_samples, _ = X.shape
-    bias = 0
+    # bias = 0
     kernel_matrix = np.zeros((n_samples, n_samples))
     beta = np.zeros(n_samples)
 
@@ -42,21 +45,49 @@ def logistic_regression_with_kernel(X, y, k, alpha, iterations):
     
     for _ in range(iterations):
         for i in range(n_samples):
-            total = 0
-            for j in range(n_samples):
-                total += beta[j] * kernel_matrix[i][j]
-            total += bias
+            total = np.dot(beta, kernel_matrix[i])
+            # for j in range(n_samples):
+            #     total += beta[j] * kernel_matrix[i][j]
+            # total += bias
             sigmoid_value = sigmoid(total)
             t = y[i]
 
-            beta += kernel_matrix[i] * alpha * (t - sigmoid_value)
+            beta[i] += alpha * (t - sigmoid_value)
                      
-            bias += (alpha * (t - (sigmoid_value))) 
+            # bias += (alpha * (t - (sigmoid_value))) 
 
-    def model(x, beta=beta, bias=bias, k=k, ref=X):
-        z = np.sum([k(ref[i], x) * beta[i] for i in range(ref.shape[0])]) + bias 
-        return round(sigmoid(z))
+    def model(x, beta=beta, k=k, ref=X):
+        z = np.sum([k(ref[i], x) * beta[i] for i in range(ref.shape[0])])
+        return sigmoid(z)
     return model
+
+def alogistic_regression_with_kernel(X, y, k, alpha, iterations):
+    n, m = X.shape #number of samples, number of features
+
+    #make kernel matrix
+    km = np.zeros((n, n))
+
+    for i in range(n):
+        for j in range(n):
+            km[i][j] = k(X[i], X[j])
+    
+    # train model
+    beta = np.zeros(n)
+    for _ in range(iterations):
+        beta += alpha * (y - np.dot(km , beta))
+    
+    print(beta)
+
+    def model(x, beta=beta, k=k, X=X):
+        z = 0
+        x = np.array(x)
+        # print(beta)
+        z = np.sum([beta[l] * k(X[l], x) for l in range(len(beta))])
+        
+        return sigmoid(z)
+    
+    return model
+
 
 
 def test1():
@@ -139,7 +170,7 @@ def test3():
     # The underlining function is y = x^3 - x^2 - x/4 + 1/4, and examples are positive if y >= 0
     # With m >= 3 we should be able to converge to the exact function
 
-    h = logistic_regression_with_kernel(X, y, monomial_kernel(3), 0.1, 900)
+    h = logistic_regression_with_kernel(X, y, monomial_kernel(3), 0.1, 500)
 
     inputs = np.array([0.34, -0.72, 0.84, -0.35, 0.3])
 
@@ -175,7 +206,7 @@ def test4():
 
     X, y = map(np.array, zip(*training_examples))
 
-    h = logistic_regression_with_kernel(X, y, monomial_kernel(10), 0.01, 4000)
+    h = logistic_regression_with_kernel(X, y, monomial_kernel(10), 0.01, 500)
 
     test_examples = [
         ([0.157, 0.715, 0.787, 0.644], 0),
