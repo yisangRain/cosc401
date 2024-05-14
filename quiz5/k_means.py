@@ -5,36 +5,23 @@ def k_means(dataset, centroids):
     centroids = np.array(centroids)
     c_num, _ = centroids.shape
 
-    # set up empty list to contain new centroids
-    new_c = np.zeros(centroids.shape)
-
-    # record the previous centroid
-    prev = np.zeros(centroids.shape)
-
     # Loop while centroid and new centroids are not same (have not converged)
-    while np.not_equal(prev, centroids).any():
+    while True:
 
         # Find argmin distance
-        c = []
+        c = [[] for _ in range(c_num)]
         for i in range(n):
             # find the index of the centroid that gave the minimum distance and into a list of indices
             distance = [np.linalg.norm(dataset[i] - centroid) ** 2 for centroid in centroids]
-            c.append(np.argmin(distance))
+            c[np.argmin(distance)].append(dataset[i])
         
-        for j in range(c_num):
-            # Calculate the new centroids
-            top = np.zeros(d)
-            bottom = 0
+        new_c = [np.mean(data, axis=0) for data in c]
+        
+        # replace old centroid with the new one and record the old one
+        if np.equal(centroids, new_c).all():
+            break
 
-            for k in range(n):
-                if np.equal(centroids[c[k]], centroids[j]).all():
-                    top += dataset[k]
-                    bottom += 1
-                
-            new_c[j] = top/bottom
-        
-        # replace old centroid with the new one and record the old old one
-        prev, centroids = centroids, new_c
+        centroids = new_c
     
     return tuple(centroids)
 
@@ -108,3 +95,7 @@ for c in k_means(train_data, centroids):
 #  1.43350000e+00 4.64879999e+00 9.19100000e-01 2.38020000e+00↩
 #  5.27070000e+02]
 
+# t = k_means(train_data, centroids)
+# t = k_means(train_data, t)
+# for c in k_means(train_data, t):
+#     print(c)
