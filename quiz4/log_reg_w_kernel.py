@@ -51,35 +51,6 @@ def logistic_regression_with_kernel(X, y, k, alpha, iterations):
         return sigmoid(z)
     return model
 
-# def alogistic_regression_with_kernel(X, y, k, alpha, iterations):
-#     n, m = X.shape #number of samples, number of features
-
-#     #make kernel matrix
-#     km = np.zeros((n, n))
-
-#     for i in range(n):
-#         for j in range(n):
-#             km[i][j] = k(X[i], X[j])
-    
-#     # train model
-#     beta = np.zeros(n)
-#     for _ in range(iterations):
-#         for i in range(n):
-#             beta[i] += alpha * (y[i] - np.dot(km[i], beta))
-    
-#     print(beta)
-
-#     def model(x, beta=beta, k=k, X=X):
-#         z = 0
-#         x = np.array(x)
-#         # print(beta)
-#         z = np.sum([beta[l] * k(X[l], x) for l in range(len(beta))])
-        
-#         return sigmoid(z)
-    
-#     return model
-
-
 
 def test1():
 

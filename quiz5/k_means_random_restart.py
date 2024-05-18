@@ -25,36 +25,24 @@ def k_means(dataset, centroids):
     
     return tuple(centroids)
 
-def distance(c1, c2):
-
-    min_dist = []
-
-    for c in c1:
-        min_dist.append(np.min([(d - c) ** 2 for d in c2]))
-    
-    return min_dist
-
 def goodness(centroids, dataset):
     # goodness = separation / compactness
 
-    n, _ = centroids.shape
+    mins = []
+    maxes = []
 
-    # Separation
-    min_dist = []
+    for cen_c in centroids:
+        for cen_d in centroids:
+            mins.append(np.min([np.linalg.norm(cen_c - cen_d) ** 2]))
+        for c in cen_c:
+            maxes.append(np.max([(c - d) ** 2 for d in cen_c]))
 
-    for i in range(n):
-        for j in range(n):
-            if i != j:
-                min_dist.append(np.min((centroids[i] - centroids[j]) ** 2))
-    
-    sep = np.mean(min_dist, axis=0)
+    sep = np.mean(mins, axis=0)
+    cap = np.mean(maxes, axis=0)
+    if cap == 0:
+        cap = sep
 
-    
-    
-    cpt
-
-
-    pass
+    return sep / cap
 
 def k_means_random_restart(dataset, k, restarts, seed=None):
     random.seed(seed)
